@@ -105,15 +105,6 @@ async function ngefollow(session,accountId){
   }
 }
 
-async function ngeComment(session, id, text){
-  try {
-    await Client.Comment.create(session, id, text);
-    return true;
-  } catch(e){
-    return false;
-  }
-}
-
 async function ngeLike(session, id){
   try{
     await Client.Like.create(session, id)
@@ -139,13 +130,11 @@ const CommentAndLike = async function(session, accountId, text){
            return chalk`{bold.blue Already Liked & Comment}`;
         }
     const task = [
-    ngeComment(session, result[0].params.id, text),
     ngeLike(session, result[0].params.id)
     ]
-    const [Comment,Like] = await Promise.all(task);
-    const printComment = Comment ? chalk`{green Comment}` : chalk`{red Comment}`;
+    const [Like] = await Promise.all(task);
     const printLike = Like ? chalk`{green Like}` : chalk`{red Like}`;
-    return chalk`{bold.green ${printComment},${printLike} [${text}]}`;
+    return chalk`{bold.green ${printLike} [${text}]}`;
   }
   return chalk`{bold.white Timeline Kosong (SKIPPED)}`
 };
